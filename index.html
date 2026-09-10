@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#087f5b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="My Savings">
+<link rel="manifest" href="manifest.json">
+<title>My Savings</title>
+<style>
+:root{--green:#087f5b;--green2:#dff8ec;--mint:#bff3d8;--red:#ef5b5b;--orange:#ff9b2f;--blue:#3d8bfd;--purple:#8a5cf6;--ink:#17251f;--muted:#718078;--bg:#f4f8f6;--card:#fff;--line:#e6eeea;--shadow:0 8px 25px rgba(21,70,52,.08)}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--ink)}
+button,input,select{font:inherit}button{border:0;cursor:pointer}.app{max-width:520px;margin:auto;min-height:100vh;padding-bottom:82px}
+header{padding:22px 18px 12px;display:flex;justify-content:space-between;align-items:center;background:var(--bg);position:sticky;top:0;z-index:5}
+.brand{display:flex;align-items:center;gap:10px}.brand-icon{width:40px;height:40px;border-radius:13px;object-fit:cover}.brand b{font-size:20px}.brand small{display:block;color:var(--muted);font-size:11px;margin-top:1px}
+.iconbtn{width:40px;height:40px;border-radius:14px;background:#fff;box-shadow:var(--shadow);font-size:18px}
+main{padding:0 16px}.hero{background:linear-gradient(135deg,#087f5b,#10a36f);color:white;border-radius:25px;padding:22px;margin:5px 0 14px;box-shadow:0 14px 30px rgba(8,127,91,.22);position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.09);right:-45px;top:-50px}
+.hero-label{font-size:12px;opacity:.82}.hero-value{font-size:38px;font-weight:800;letter-spacing:-1px;margin:4px 0 8px}.hero-sub{font-size:12px;opacity:.9}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:14px}.stat{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px;box-shadow:var(--shadow)}.stat span{font-size:11px;color:var(--muted)}.stat b{display:block;font-size:21px;margin-top:4px}.spent b{color:var(--red)}.saved b{color:var(--green)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:17px;margin-bottom:14px;box-shadow:var(--shadow)}.card-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}.card-title b{font-size:16px}.muted{color:var(--muted);font-size:12px}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:10px}.quick button{padding:13px;border-radius:15px;font-weight:700}.receive{background:var(--green2);color:var(--green)}.expense{background:#fff0f0;color:#d94949}
+.progress{height:9px;background:#edf2ef;border-radius:99px;overflow:hidden}.progress i{display:block;height:100%;background:linear-gradient(90deg,#22b573,#75dcae);border-radius:99px;width:0}
+.goal-row{display:flex;justify-content:space-between;align-items:end;margin-bottom:8px}.goal-row b{font-size:20px}.goal-edit{color:var(--green);font-size:12px;background:none;padding:0}
+.tip{background:#fff8dc;border:1px solid #f8e9a7;border-radius:16px;padding:13px;font-size:12px;line-height:1.45}.tip b{color:#7b6410}
+.chart{display:flex;gap:18px;align-items:center}.donut{width:116px;height:116px;border-radius:50%;background:conic-gradient(#ff9b2f 0 25%,#3d8bfd 25% 48%,#8a5cf6 48% 63%,#aab5b0 63% 100%);position:relative;flex:none}.donut:after{content:"";position:absolute;inset:27px;background:white;border-radius:50%}.legend{flex:1}.legend div{display:flex;justify-content:space-between;font-size:12px;margin:9px 0}.dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:7px}.history-item{display:flex;justify-content:space-between;gap:10px;padding:13px 0;border-bottom:1px solid var(--line)}.history-item:last-child{border-bottom:0}.hleft{display:flex;gap:10px;min-width:0}.cat{width:38px;height:38px;border-radius:13px;display:grid;place-items:center;flex:none}.cat.food{background:#fff0dc}.cat.travel{background:#e5f0ff}.cat.stationery{background:#eee7ff}.cat.other{background:#e9eeee}.hleft b{display:block;font-size:13px}.hleft small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.amount{font-weight:800;color:var(--red);white-space:nowrap}.empty{text-align:center;color:var(--muted);padding:24px 8px;font-size:13px}
+.insight{display:flex;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.insight:last-child{border-bottom:0}.insight-icon{width:39px;height:39px;border-radius:13px;display:grid;place-items:center;background:var(--green2);flex:none}.insight b{font-size:13px}.insight p{font-size:11px;color:var(--muted);margin:4px 0;line-height:1.4}.save-pill{display:inline-block;background:var(--green2);color:var(--green);padding:5px 8px;border-radius:99px;font-size:10px;font-weight:800}
+.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:8px 10px calc(8px + env(safe-area-inset-bottom));z-index:10}.nav{background:none;color:#8a958f;font-size:10px;padding:6px}.nav strong{display:block;font-size:18px;line-height:18px;margin-bottom:3px}.nav.active{color:var(--green)}
+.modal{position:fixed;inset:0;background:rgba(15,32,25,.45);display:none;align-items:flex-end;z-index:30}.modal.show{display:flex}.sheet{background:white;width:min(520px,100%);margin:auto 0 0;border-radius:26px 26px 0 0;padding:20px 18px calc(22px + env(safe-area-inset-bottom));max-height:88vh;overflow:auto}.sheet h2{margin:0 0 16px;font-size:20px}.field{margin:11px 0}.field label{display:block;font-size:11px;font-weight:700;color:#52605a;margin-bottom:6px}.field input,.field select{width:100%;padding:13px;border:1px solid #dce6e1;border-radius:14px;outline:none;background:#fbfdfc}.field input:focus,.field select:focus{border-color:#62b895}.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.catpick{padding:10px 4px;background:#f4f7f5;border:1px solid var(--line);border-radius:13px;font-size:10px}.catpick.sel{border:2px solid var(--green);background:var(--green2)}.primary{width:100%;padding:14px;border-radius:15px;background:var(--green);color:white;font-weight:800;margin-top:8px}.secondary{width:100%;padding:12px;border-radius:15px;background:#f0f4f2;color:#51615a;font-weight:700;margin-top:8px}
+.toast{position:fixed;left:50%;bottom:92px;transform:translate(-50%,20px);background:#17352a;color:#fff;padding:11px 15px;border-radius:13px;font-size:12px;opacity:0;pointer-events:none;transition:.25s;z-index:50}.toast.show{opacity:1;transform:translate(-50%,0)}
+.fade{animation:fade .3s ease}@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+@media(min-width:600px){body{padding:10px 0}.app{border-radius:28px;background:var(--bg);box-shadow:0 0 50px rgba(0,0,0,.08)}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand"><img class="brand-icon" src="icons/icon-192.png"><div><b>My Savings</b><small>Track • Spend • Grow</small></div></div>
+  <button class="iconbtn" onclick="openGoal()" aria-label="Savings goal">🎯</button>
+</header>
+
+<main id="content"></main>
+
+<nav class="bottom">
+ <button class="nav active" data-tab="home" onclick="go('home')"><strong>⌂</strong>Home</button>
+ <button class="nav" data-tab="add" onclick="openAdd()"><strong>＋</strong>Add</button>
+ <button class="nav" data-tab="history" onclick="go('history')"><strong>▤</strong>History</button>
+ <button class="nav" data-tab="insights" onclick="go('insights')"><strong>◒</strong>Insights</button>
+</nav>
+</div>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="sheet" id="sheet"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const KEY='mySavings_v1';
+let db=JSON.parse(localStorage.getItem(KEY)||'null')||{received:[],expenses:[],goal:10000};
+const cats={Food:{emoji:'🍔',cls:'food'},Travel:{emoji:'🚌',cls:'travel'},Stationery:{emoji:'📚',cls:'stationery'},Other:{emoji:'•••',cls:'other'}};
+let currentTab='home';
+
+function save(){localStorage.setItem(KEY,JSON.stringify(db))}
+function money(n){return '₹'+Math.round(n||0).toLocaleString('en-IN')}
+function sum(a){return a.reduce((x,y)=>x+Number(y.amount||0),0)}
+function totalReceived(){return sum(db.received)}
+function totalSpent(){return sum(db.expenses)}
+function balance(){return totalReceived()-totalSpent()}
+function monthKey(d){let x=new Date(d);return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')}
+function thisMonth(){let k=monthKey(new Date());return {received:sum(db.received.filter(x=>monthKey(x.date)===k)),spent:sum(db.expenses.filter(x=>monthKey(x.date)===k))}}
+function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+function go(tab){currentTab=tab;document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.tab===tab));render()}
+function render(){
+ const m=thisMonth(), total=totalSpent(), rec=totalReceived(), bal=balance();
+ if(currentTab==='home')renderHome(m,rec,total,bal);
+ if(currentTab==='history')renderHistory();
+ if(currentTab==='insights')renderInsights();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function renderHome(m,rec,total,bal){
+ const goal=Math.max(1,Number(db.goal)||10000), gp=Math.max(0,Math.min(100,bal/goal*100));
+ const recent=[...db.expenses].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,4);
+ const by=catTotals(), max=Math.max(1,...Object.values(by));
+ document.getElementById('content').innerHTML=`<div class="fade">
+ <section class="hero"><div class="hero-label">Money remaining</div><div class="hero-value" id="balanceValue">${money(bal)}</div><div class="hero-sub">From ${money(rec)} received • ${money(total)} spent</div></section>
+ <section class="stats"><div class="stat spent"><span>Spent this month</span><b>${money(m.spent)}</b></div><div class="stat saved"><span>Saved this month</span><b>${money(m.received-m.spent)}</b></div></section>
+ <section class="card"><div class="card-title"><b>Quick add</b><span class="muted">Keep it simple</span></div><div class="quick"><button class="receive" onclick="openAdd('received')">＋ Money received</button><button class="expense" onclick="openAdd('expense')">＋ Expense</button></div></section>
+ <section class="card"><div class="card-title"><b>Saving goal</b><button class="goal-edit" onclick="openGoal()">Edit</button></div>
+ <div class="goal-row"><div><span class="muted">Current saving</span><br><b>${money(bal)}</b></div><span class="muted">${Math.round(gp)}%</span></div><div class="progress"><i style="width:${gp}%"></i></div><div class="muted" style="margin-top:7px">Target ${money(goal)}</div></section>
+ <section class="card"><div class="card-title"><b>Where your money goes</b><span class="muted">${money(total)} total</span></div>
+ <div class="chart"><div class="donut" style="${donutStyle(by,total)}"></div><div class="legend">${legend(by,total)}</div></div></section>
+ <section class="tip">💡 <b>${smartTip(by,total)}</b></section>
+ <section class="card"><div class="card-title"><b>Recent expenses</b><button class="goal-edit" onclick="go('history')">See all</button></div>${recent.length?recent.map(itemHTML).join(''):'<div class="empty">No expenses yet. Add your first one above.</div>'}</section>
+ </div>`;
+}
+function catTotals(){let o={Food:0,Travel:0,Stationery:0,Other:0};db.expenses.forEach(x=>o[x.category]=(o[x.category]||0)+Number(x.amount));return o}
+function donutStyle(by,total){if(!total)return'background:#e6eeea';let p=0,parts=[];Object.entries(by).forEach(([k,v])=>{let q=v/total*100;parts.push(`${catColor(k)} ${p}% ${p+q}%`);p+=q});return'background:conic-gradient('+parts.join(',')+')'}
+function catColor(k){return {Food:'#ff9b2f',Travel:'#3d8bfd',Stationery:'#8a5cf6',Other:'#aab5b0'}[k]}
+function legend(by,total){return Object.entries(by).map(([k,v])=>`<div><span><i class="dot" style="background:${catColor(k)}"></i>${k}</span><b>${total?Math.round(v/total*100):0}%</b></div>`).join('')}
+function smartTip(by,total){if(!total)return'Start tracking every expense. Small records create useful saving suggestions.';let top=Object.entries(by).sort((a,b)=>b[1]-a[1])[0];let pct=Math.round(top[1]/total*100),save=Math.round(top[1]*.1);return pct>=30?`You spend ${pct}% on ${top[0]}. Cutting it by 10% could save about ${money(save)} for the same spending period.`:`Your spending is fairly balanced. Keep recording daily and protect your savings.`}
+function itemHTML(x){let c=cats[x.category]||cats.Other;return`<div class="history-item"><div class="hleft"><div class="cat ${c.cls}">${c.emoji}</div><div><b>${esc(x.category)}</b><small>${esc(x.note)||'Expense'} • ${new Date(x.date).toLocaleDateString('en-IN',{day:'2-digit',month:'short'})}</small></div></div><div class="amount">−${money(x.amount)}</div></div>`}
+
+function renderHistory(){
+ let arr=[...db.expenses].sort((a,b)=>new Date(b.date)-new Date(a.date));
+ document.getElementById('content').innerHTML=`<div class="fade"><section class="card" style="margin-top:5px"><div class="card-title"><b>Expense History</b><span class="muted">${arr.length} entries</span></div>${arr.length?arr.map(x=>itemHTML(x)+`<button onclick="deleteExpense('${x.id}')" style="float:right;margin-top:-46px;background:none;color:#bd6767;font-size:11px">Delete</button>`).join(''):'<div class="empty">Your expense history will appear here.</div>'}</section>
+ <section class="card"><div class="card-title"><b>Money received</b><span class="muted">${money(totalReceived())}</span></div>${db.received.length?[...db.received].sort((a,b)=>new Date(b.date)-new Date(a.date)).map(x=>`<div class="history-item"><div><b>💰 ${esc(x.source)||'Family'}</b><small>${new Date(x.date).toLocaleDateString('en-IN',{day:'2-digit',month:'short'})}</small></div><b style="color:var(--green)">+${money(x.amount)}</b></div>`).join(''):'<div class="empty">No money received records yet.</div>'}</section></div>`;
+}
+function renderInsights(){
+ const by=catTotals(),total=totalSpent(),m=thisMonth();
+ const rows=Object.entries(by).sort((a,b)=>b[1]-a[1]);
+ const avg=db.expenses.length?totalSpent()/Math.max(1,new Set(db.expenses.map(x=>monthKey(x.date))).size):0;
+ const monthlySave=m.received-m.spent;
+ document.getElementById('content').innerHTML=`<div class="fade"><section class="card" style="margin-top:5px"><div class="card-title"><b>Smart Suggestions</b>💡</div>${rows.map(([k,v])=>{let pct=total?Math.round(v/total*100):0,save=Math.round(v*.1);return`<div class="insight"><div class="insight-icon">${cats[k].emoji}</div><div><b>${k} • ${pct}% of spending</b><p>You spent ${money(v)}. Try reducing ${k.toLowerCase()} by 10% and redirect it to savings.</p><span class="save-pill">Potential saving ${money(save)}</span></div></div>`}).join('')||'<div class="empty">Add expenses to unlock personalized suggestions.</div>'}</section>
+ <section class="card"><div class="card-title"><b>Saving prediction</b><span class="muted">based on your records</span></div><div class="stat saved" style="box-shadow:none;border:0;padding:0"><span>Estimated saving per month</span><b>${money(monthlySave)}</b></div><p class="muted">If your recent monthly saving continues:</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${[3,6,12].map(n=>`<div style="background:var(--green2);padding:12px;border-radius:14px"><span class="muted">${n} months</span><br><b>${money(monthlySave*n)}</b></div>`).join('')}</div></section>
+ <section class="tip">🎯 <b>Best rule for you:</b> record the expense immediately. At the end of each week, check the biggest category and cut that one first.</section></div>`;
+}
+function openAdd(type='expense'){
+ document.getElementById('modal').classList.add('show');
+ const isRec=type==='received';
+ document.getElementById('sheet').innerHTML=`<h2>${isRec?'Add Money Received':'Add Expense'}</h2>
+ <div class="field"><label>Amount</label><input id="amount" type="number" inputmode="decimal" placeholder="₹ 0" min="0"></div>
+ ${isRec?`<div class="field"><label>From</label><select id="source"><option>Family</option><option>Other</option></select></div>`:`<div class="field"><label>Purpose</label><div class="cats">${Object.entries(cats).map(([k,c])=>`<button class="catpick ${k==='Food'?'sel':''}" data-cat="${k}" onclick="pickCat(this)">${c.emoji}<br>${k}</button>`).join('')}</div></div>
+ <div class="field"><label>Note (optional)</label><input id="note" placeholder="e.g. Lunch at college"></div>`}
+ <div class="field"><label>Date</label><input id="date" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
+ <button class="primary" onclick="${isRec?'saveReceived()':'saveExpense()'}">Save</button><button class="secondary" onclick="closeModal()">Cancel</button>`;
+}
+function pickCat(btn){document.querySelectorAll('.catpick').forEach(x=>x.classList.remove('sel'));btn.classList.add('sel')}
+function saveExpense(){let amount=Number(document.getElementById('amount').value);if(!(amount>0))return toast('Enter an amount');let cat=document.querySelector('.catpick.sel')?.dataset.cat||'Food';db.expenses.push({id:Date.now().toString(),amount,category:cat,note:document.getElementById('note').value,date:document.getElementById('date').value});save();closeModal();toast('Expense saved');go('home')}
+function saveReceived(){let amount=Number(document.getElementById('amount').value);if(!(amount>0))return toast('Enter an amount');db.received.push({id:Date.now().toString(),amount,source:document.getElementById('source').value,date:document.getElementById('date').value});save();closeModal();toast('Money received');go('home')}
+function deleteExpense(id){if(!confirm('Delete this expense?'))return;db.expenses=db.expenses.filter(x=>x.id!==id);save();render();toast('Expense deleted')}
+function openGoal(){document.getElementById('modal').classList.add('show');document.getElementById('sheet').innerHTML=`<h2>🎯 Savings Goal</h2><div class="field"><label>Your target</label><input id="goal" type="number" inputmode="decimal" value="${Number(db.goal)||10000}"></div><button class="primary" onclick="saveGoal()">Save goal</button><button class="secondary" onclick="closeModal()">Cancel</button>`}
+function saveGoal(){let n=Number(document.getElementById('goal').value);if(!(n>0))return toast('Enter a valid goal');db.goal=n;save();closeModal();render();toast('Goal updated')}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+function toast(t){let e=document.getElementById('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1800)}
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('service-worker.js').catch(()=>{}));
+render();
+</script>
+</body>
+</html>
