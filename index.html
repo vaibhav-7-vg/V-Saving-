@@ -117,6 +117,24 @@ main{padding:0 16px}
 body{padding:10px 0}
 .app{border-radius:28px;background:var(--bg);box-shadow:0 0 50px rgba(0,0,0,.08)}
 }
+
+.premium-btn{background:#fff7df;color:#8a6500;border:1px solid #f1df9b;box-shadow:var(--shadow);padding:10px 12px;border-radius:14px;font-weight:800;font-size:11px}
+.premium-hero{background:linear-gradient(135deg,#17251f,#315c4c);color:#fff;border-radius:22px;padding:19px;margin-bottom:14px;box-shadow:0 12px 28px rgba(21,70,52,.16)}
+.premium-hero h2{margin:0 0 6px;font-size:20px}
+.premium-hero p{margin:0;color:rgba(255,255,255,.78);font-size:11px;line-height:1.45}
+.plan-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:15px;margin-top:10px}
+.plan-card.premium{border:2px solid #d6b75b}
+.plan-row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.plan-name{font-weight:800;font-size:15px}
+.price{font-weight:900;font-size:20px}
+.feature-list{list-style:none;padding:0;margin:13px 0 0}
+.feature-list li{padding:7px 0;font-size:12px;border-bottom:1px solid var(--line)}
+.feature-list li:last-child{border-bottom:0}
+.feature-list li:before{content:'✓';color:var(--green);font-weight:900;margin-right:8px}
+.locked{opacity:.82}
+.badge-free{background:#edf2ef;color:#52605a;padding:5px 8px;border-radius:99px;font-size:10px;font-weight:800}
+.badge-premium{background:#fff0bd;color:#7b5b00;padding:5px 8px;border-radius:99px;font-size:10px;font-weight:800}
+
 </style>
 </head>
 
@@ -128,7 +146,7 @@ body{padding:10px 0}
 <img class="brand-icon" src="icons/icon-192.png">
 <div><b>My Savings</b><small>Track • Spend • Grow</small></div>
 </div>
-<button class="iconbtn" onclick="openGoal()" aria-label="Savings goal">🎯</button>
+<div style="display:flex;gap:7px;align-items:center"><button class="premium-btn" onclick="openPremium()">⭐ Premium</button><button class="iconbtn" onclick="openGoal()" aria-label="Savings goal">🎯</button></div>
 </header>
 
 <main id="content"></main>
@@ -151,6 +169,39 @@ body{padding:10px 0}
 <script>
 
 const KEY='mySavings_v1';
+const SUB_KEY='mySavings_subscription_v1';
+
+const APP_CONFIG={
+  monthlyPrice:49,
+  yearlyPrice:399
+};
+
+const PREMIUM_FEATURES=[
+  'Multiple savings goals',
+  'Advanced spending analysis',
+  'Monthly financial reports',
+  'Budget limits',
+  'Recurring income & expenses',
+  'Export reports',
+  'Advanced savings prediction',
+  'Backup & cloud sync'
+];
+
+let subscription=JSON.parse(localStorage.getItem(SUB_KEY)||'null')||{
+  plan:'free',
+  status:'inactive',
+  expiresAt:null
+};
+
+function isPremium(){
+  return subscription.plan==='premium' && subscription.status==='active';
+}
+
+function requirePremium(feature){
+  if(isPremium())return true;
+  openPremium(feature);
+  return false;
+}
 
 let db=JSON.parse(localStorage.getItem(KEY)||'null')||{
 received:[],
@@ -731,7 +782,7 @@ Potential saving ${money(save)}
 
 <div class="stat saved" style="box-shadow:none;border:0;padding:0">
 
-<span>Estimated saving per month</span>
+<span>Estimate saving per month</span>
 
 <b>${money(monthlySave)}</b>
 
@@ -795,7 +846,7 @@ placeholder="₹ 0"
 min="0">
 
 </div>
-
+  
 ${isRec
 
 ?`
@@ -950,7 +1001,6 @@ function openBorrowed(){
 document.getElementById('modal').classList.add('show');
 
 document.getElementById('sheet').innerHTML=`
-
 <h2>💳 Borrowed Money</h2>
 
 <div class="field">
@@ -1179,8 +1229,7 @@ function openGoal(){
 document.getElementById('modal').classList.add('show');
 
 document.getElementById('sheet').innerHTML=`
-
-<h2>🎯 Savings Goal</h2>
+  <h2>🎯 Savings Goal</h2>
 
 <div class="field">
 
@@ -1228,6 +1277,65 @@ render();
 toast('Goal updated')
 }
 
+function openPremium(feature=''){
+
+  document.getElementById('modal').classList.add('show');
+
+  document.getElementById('sheet').innerHTML=`
+
+    <div class="premium-hero">
+      <h2>⭐ My Savings Premium</h2>
+      <p>Get more control over your savings, spending and financial planning.</p>
+    </div>
+
+    ${feature?`<div class="tip" style="margin-bottom:10px">🔒 <b>${esc(feature)}</b> is a Premium feature.</div>`:''}
+
+    <div class="plan-card">
+      <div class="plan-row">
+        <div>
+          <div class="plan-name">Free</div>
+          <span class="badge-free">CURRENT PLAN</span>
+        </div>
+        <div class="price">₹0</div>
+      </div>
+      <ul class="feature-list">
+        <li>Money received tracking</li>
+        <li>Daily expense tracking</li>
+        <li>Borrowed money & repayments</li>
+        <li>One savings goal</li>
+        <li>Basic spending insights</li>
+      </ul>
+    </div>
+
+    <div class="plan-card premium">
+      <div class="plan-row">
+        <div>
+          <div class="plan-name">Premium ⭐</div>
+          <span class="badge-premium">MORE CONTROL</span>
+        </div>
+        <div class="price">₹${APP_CONFIG.monthlyPrice}<span style="font-size:10px;font-weight:700">/month</span></div>
+      </div>
+      <ul class="feature-list">
+        ${PREMIUM_FEATURES.map(x=>`<li>${x}</li>`).join('')}
+      </ul>
+    </div>
+
+    <button class="primary" onclick="premiumComingSoon()">
+      Continue to Premium
+    </button>
+
+    <button class="secondary" onclick="closeModal()">Maybe later</button>
+
+    <p class="muted" style="text-align:center;margin:12px 4px 0;line-height:1.5">
+      Secure payment and verified subscription activation will be connected before launch.
+    </p>
+  `;
+}
+
+function premiumComingSoon(){
+  toast('Premium payment is being prepared');
+}
+
 function closeModal(){
 
 document.getElementById('modal')
@@ -1262,4 +1370,5 @@ render();
 
 </body>
 </html>
+
 
