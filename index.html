@@ -10,200 +10,864 @@
 <link rel="manifest" href="manifest.json">
 <title>My Savings</title>
 
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-:root{--green:#087f5b;--green2:#dff8ec;--mint:#bff3d8;--red:#ef5b5b;--orange:#ff9b2f;--blue:#3d8bfd;--purple:#8a5cf6;--ink:#17251f;--muted:#718078;--bg:#f4f8f6;--card:#fff;--line:#e6eeea;--shadow:0 8px 25px rgba(21,70,52,.08)}
+:root{
+--green:#087f5b;
+--green2:#dff8ec;
+--mint:#bff3d8;
+--red:#ef5b5b;
+--orange:#ff9b2f;
+--blue:#3d8bfd;
+--purple:#8a5cf6;
+--ink:#17251f;
+--muted:#718078;
+--bg:#f4f8f6;
+--card:#fff;
+--line:#e6eeea;
+--shadow:0 8px 25px rgba(21,70,52,.08)
+}
+
 *{box-sizing:border-box}
-body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--ink)}
+
+body{
+margin:0;
+font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;
+background:var(--bg);
+color:var(--ink)
+}
+
 button,input,select{font:inherit}
 button{border:0;cursor:pointer}
-.app{max-width:520px;margin:auto;min-height:100vh;padding-bottom:82px}
 
-header{padding:22px 18px 12px;display:flex;justify-content:space-between;align-items:center;background:var(--bg);position:sticky;top:0;z-index:5}
-.brand{display:flex;align-items:center;gap:10px}
-.brand-icon{width:40px;height:40px;border-radius:13px;object-fit:cover}
+.app{
+max-width:520px;
+margin:auto;
+min-height:100vh;
+padding-bottom:82px
+}
+
+header{
+padding:22px 18px 12px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:var(--bg);
+position:sticky;
+top:0;
+z-index:5
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:10px
+}
+
+.brand-icon{
+width:40px;
+height:40px;
+border-radius:13px;
+object-fit:cover
+}
+
 .brand b{font-size:20px}
-.brand small{display:block;color:var(--muted);font-size:11px;margin-top:1px}
-.iconbtn{width:40px;height:40px;border-radius:14px;background:#fff;box-shadow:var(--shadow);font-size:18px}
+
+.brand small{
+display:block;
+color:var(--muted);
+font-size:11px;
+margin-top:1px
+}
+
+.iconbtn{
+width:40px;
+height:40px;
+border-radius:14px;
+background:#fff;
+box-shadow:var(--shadow);
+font-size:18px
+}
 
 main{padding:0 16px}
-.hero{background:linear-gradient(135deg,#087f5b,#10a36f);color:white;border-radius:25px;padding:22px;margin:5px 0 14px;box-shadow:0 14px 30px rgba(8,127,91,.22);position:relative;overflow:hidden}
-.hero:after{content:"";position:absolute;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.09);right:-45px;top:-50px}
-.hero-label{font-size:12px;opacity:.82}
-.hero-value{font-size:38px;font-weight:800;letter-spacing:-1px;margin:4px 0 8px}
-.hero-sub{font-size:12px;opacity:.9}
 
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:14px}
-.stat{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px;box-shadow:var(--shadow)}
-.stat span{font-size:11px;color:var(--muted)}
-.stat b{display:block;font-size:21px;margin-top:4px}
+.hero{
+background:linear-gradient(135deg,#087f5b,#10a36f);
+color:white;
+border-radius:25px;
+padding:22px;
+margin:5px 0 14px;
+box-shadow:0 14px 30px rgba(8,127,91,.22);
+position:relative;
+overflow:hidden
+}
+
+.hero:after{
+content:"";
+position:absolute;
+width:150px;
+height:150px;
+border-radius:50%;
+background:rgba(255,255,255,.09);
+right:-45px;
+top:-50px
+}
+
+.hero-label{font-size:12px;opacity:.82}
+
+.hero-value{
+font-size:38px;
+font-weight:800;
+letter-spacing:-1px;
+margin:4px 0 8px
+}
+
+.hero-sub{
+font-size:12px;
+opacity:.9
+}
+
+.stats{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:11px;
+margin-bottom:14px
+}
+
+.stat{
+background:var(--card);
+border:1px solid var(--line);
+border-radius:18px;
+padding:15px;
+box-shadow:var(--shadow)
+}
+
+.stat span{
+font-size:11px;
+color:var(--muted)
+}
+
+.stat b{
+display:block;
+font-size:21px;
+margin-top:4px
+}
+
 .spent b{color:var(--red)}
 .saved b{color:var(--green)}
 
-.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:17px;margin-bottom:14px;box-shadow:var(--shadow)}
-.card-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}
+.card{
+background:var(--card);
+border:1px solid var(--line);
+border-radius:20px;
+padding:17px;
+margin-bottom:14px;
+box-shadow:var(--shadow)
+}
+
+.card-title{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:13px
+}
+
 .card-title b{font-size:16px}
-.muted{color:var(--muted);font-size:12px}
 
-.quick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.quick button{padding:13px;border-radius:15px;font-weight:700}
-.receive{background:var(--green2);color:var(--green)}
-.expense{background:#fff0f0;color:#d94949}
+.muted{
+color:var(--muted);
+font-size:12px
+}
 
-.progress{height:9px;background:#edf2ef;border-radius:99px;overflow:hidden}
-.progress i{display:block;height:100%;background:linear-gradient(90deg,#22b573,#75dcae);border-radius:99px;width:0}
+.quick{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px
+}
 
-.goal-row{display:flex;justify-content:space-between;align-items:end;margin-bottom:8px}
+.quick button{
+padding:13px;
+border-radius:15px;
+font-weight:700
+}
+
+.receive{
+background:var(--green2);
+color:var(--green)
+}
+
+.expense{
+background:#fff0f0;
+color:#d94949
+}
+
+.progress{
+height:9px;
+background:#edf2ef;
+border-radius:99px;
+overflow:hidden
+}
+
+.progress i{
+display:block;
+height:100%;
+background:linear-gradient(90deg,#22b573,#75dcae);
+border-radius:99px;
+width:0
+}
+
+.goal-row{
+display:flex;
+justify-content:space-between;
+align-items:end;
+margin-bottom:8px
+}
+
 .goal-row b{font-size:20px}
-.goal-edit{color:var(--green);font-size:12px;background:none;padding:0}
 
-.tip{background:#fff8dc;border:1px solid #f8e9a7;border-radius:16px;padding:13px;font-size:12px;line-height:1.45}
+.goal-edit{
+color:var(--green);
+font-size:12px;
+background:none;
+padding:0
+}
+
+.tip{
+background:#fff8dc;
+border:1px solid #f8e9a7;
+border-radius:16px;
+padding:13px;
+font-size:12px;
+line-height:1.45
+}
+
 .tip b{color:#7b6410}
 
-.chart{display:flex;gap:18px;align-items:center}
-.donut{width:116px;height:116px;border-radius:50%;background:conic-gradient(#ff9b2f 0 25%,#3d8bfd 25% 48%,#8a5cf6 48% 63%,#aab5b0 63% 100%);position:relative;flex:none}
-.donut:after{content:"";position:absolute;inset:27px;background:white;border-radius:50%}
-.legend{flex:1}
-.legend div{display:flex;justify-content:space-between;font-size:12px;margin:9px 0}
-.dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:7px}
+.chart{
+display:flex;
+gap:18px;
+align-items:center
+}
 
-.history-item{display:flex;justify-content:space-between;gap:10px;padding:13px 0;border-bottom:1px solid var(--line)}
+.donut{
+width:116px;
+height:116px;
+border-radius:50%;
+background:conic-gradient(
+#ff9b2f 0 25%,
+#3d8bfd 25% 48%,
+#8a5cf6 48% 63%,
+#aab5b0 63% 100%
+);
+position:relative;
+flex:none
+}
+
+.donut:after{
+content:"";
+position:absolute;
+inset:27px;
+background:white;
+border-radius:50%
+}
+
+.legend{flex:1}
+
+.legend div{
+display:flex;
+justify-content:space-between;
+font-size:12px;
+margin:9px 0
+}
+
+.dot{
+width:8px;
+height:8px;
+border-radius:50%;
+display:inline-block;
+margin-right:7px
+}
+
+.history-item{
+display:flex;
+justify-content:space-between;
+gap:10px;
+padding:13px 0;
+border-bottom:1px solid var(--line)
+}
+
 .history-item:last-child{border-bottom:0}
-.hleft{display:flex;gap:10px;min-width:0}
-.cat{width:38px;height:38px;border-radius:13px;display:grid;place-items:center;flex:none}
+
+.hleft{
+display:flex;
+gap:10px;
+min-width:0
+}
+
+.cat{
+width:38px;
+height:38px;
+border-radius:13px;
+display:grid;
+place-items:center;
+flex:none
+}
+
 .cat.food{background:#fff0dc}
 .cat.travel{background:#e5f0ff}
 .cat.stationery{background:#eee7ff}
 .cat.other{background:#e9eeee}
-.hleft b{display:block;font-size:13px}
-.hleft small{display:block;color:var(--muted);font-size:10px;margin-top:3px}
-.amount{font-weight:800;color:var(--red);white-space:nowrap}
-.empty{text-align:center;color:var(--muted);padding:24px 8px;font-size:13px}
 
-.insight{display:flex;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
+.hleft b{
+display:block;
+font-size:13px
+}
+
+.hleft small{
+display:block;
+color:var(--muted);
+font-size:10px;
+margin-top:3px
+}
+
+.amount{
+font-weight:800;
+color:var(--red);
+white-space:nowrap
+}
+
+.empty{
+text-align:center;
+color:var(--muted);
+padding:24px 8px;
+font-size:13px
+}
+
+.insight{
+display:flex;
+gap:12px;
+padding:13px 0;
+border-bottom:1px solid var(--line)
+}
+
 .insight:last-child{border-bottom:0}
-.insight-icon{width:39px;height:39px;border-radius:13px;display:grid;place-items:center;background:var(--green2);flex:none}
-.insight b{font-size:13px}
-.insight p{font-size:11px;color:var(--muted);margin:4px 0;line-height:1.4}
-.save-pill{display:inline-block;background:var(--green2);color:var(--green);padding:5px 8px;border-radius:99px;font-size:10px;font-weight:800}
 
-.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:8px 10px calc(8px + env(safe-area-inset-bottom));z-index:10}
-.nav{background:none;color:#8a958f;font-size:10px;padding:6px}
-.nav strong{display:block;font-size:18px;line-height:18px;margin-bottom:3px}
+.insight-icon{
+width:39px;
+height:39px;
+border-radius:13px;
+display:grid;
+place-items:center;
+background:var(--green2);
+flex:none
+}
+
+.insight b{font-size:13px}
+
+.insight p{
+font-size:11px;
+color:var(--muted);
+margin:4px 0;
+line-height:1.4
+}
+
+.save-pill{
+display:inline-block;
+background:var(--green2);
+color:var(--green);
+padding:5px 8px;
+border-radius:99px;
+font-size:10px;
+font-weight:800
+}
+
+.bottom{
+position:fixed;
+bottom:0;
+left:50%;
+transform:translateX(-50%);
+width:min(520px,100%);
+background:rgba(255,255,255,.95);
+backdrop-filter:blur(12px);
+border-top:1px solid var(--line);
+display:grid;
+grid-template-columns:repeat(4,1fr);
+padding:8px 10px calc(8px + env(safe-area-inset-bottom));
+z-index:10
+}
+
+.nav{
+background:none;
+color:#8a958f;
+font-size:10px;
+padding:6px
+}
+
+.nav strong{
+display:block;
+font-size:18px;
+line-height:18px;
+margin-bottom:3px
+}
+
 .nav.active{color:var(--green)}
 
-.modal{position:fixed;inset:0;background:rgba(15,32,25,.45);display:none;align-items:flex-end;z-index:30}
+.modal{
+position:fixed;
+inset:0;
+background:rgba(15,32,25,.45);
+display:none;
+align-items:flex-end;
+z-index:30
+}
+
 .modal.show{display:flex}
-.sheet{background:white;width:min(520px,100%);margin:auto 0 0;border-radius:26px 26px 0 0;padding:20px 18px calc(22px + env(safe-area-inset-bottom));max-height:88vh;overflow:auto}
-.sheet h2{margin:0 0 16px;font-size:20px}
+
+.sheet{
+background:white;
+width:min(520px,100%);
+margin:auto 0 0;
+border-radius:26px 26px 0 0;
+padding:20px 18px calc(22px + env(safe-area-inset-bottom));
+max-height:88vh;
+overflow:auto
+}
+
+.sheet h2{
+margin:0 0 16px;
+font-size:20px
+}
+
 .field{margin:11px 0}
-.field label{display:block;font-size:11px;font-weight:700;color:#52605a;margin-bottom:6px}
-.field input,.field select{width:100%;padding:13px;border:1px solid #dce6e1;border-radius:14px;outline:none;background:#fbfdfc}
-.field input:focus,.field select:focus{border-color:#62b895}
 
-.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
-.catpick{padding:10px 4px;background:#f4f7f5;border:1px solid var(--line);border-radius:13px;font-size:10px}
-.catpick.sel{border:2px solid var(--green);background:var(--green2)}
+.field label{
+display:block;
+font-size:11px;
+font-weight:700;
+color:#52605a;
+margin-bottom:6px
+}
 
-.primary{width:100%;padding:14px;border-radius:15px;background:var(--green);color:white;font-weight:800;margin-top:8px}
-.secondary{width:100%;padding:12px;border-radius:15px;background:#f0f4f2;color:#51615a;font-weight:700;margin-top:8px}
+.field input,
+.field select{
+width:100%;
+padding:13px;
+border:1px solid #dce6e1;
+border-radius:14px;
+outline:none;
+background:#fbfdfc
+}
 
-.toast{position:fixed;left:50%;bottom:92px;transform:translate(-50%,20px);background:#17352a;color:#fff;padding:11px 15px;border-radius:13px;font-size:12px;opacity:0;pointer-events:none;transition:.25s;z-index:50}
-.toast.show{opacity:1;transform:translate(-50%,0)}
+.field input:focus,
+.field select:focus{
+border-color:#62b895
+}
+
+.cats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:7px
+}
+
+.catpick{
+padding:10px 4px;
+background:#f4f7f5;
+border:1px solid var(--line);
+border-radius:13px;
+font-size:10px
+}
+
+.catpick.sel{
+border:2px solid var(--green);
+background:var(--green2)
+}
+
+.primary{
+width:100%;
+padding:14px;
+border-radius:15px;
+background:var(--green);
+color:white;
+font-weight:800;
+margin-top:8px
+}
+
+.secondary{
+width:100%;
+padding:12px;
+border-radius:15px;
+background:#f0f4f2;
+color:#51615a;
+font-weight:700;
+margin-top:8px
+}
+
+.danger{
+width:100%;
+padding:12px;
+border-radius:15px;
+background:#fff0f0;
+color:#d94949;
+font-weight:700;
+margin-top:8px
+}
+
+.toast{
+position:fixed;
+left:50%;
+bottom:92px;
+transform:translate(-50%,20px);
+background:#17352a;
+color:#fff;
+padding:11px 15px;
+border-radius:13px;
+font-size:12px;
+opacity:0;
+pointer-events:none;
+transition:.25s;
+z-index:50
+}
+
+.toast.show{
+opacity:1;
+transform:translate(-50%,0)
+}
 
 .fade{animation:fade .3s ease}
-@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+@keyframes fade{
+from{opacity:0;transform:translateY(5px)}
+to{opacity:1;transform:none}
+}
 
 @media(min-width:600px){
 body{padding:10px 0}
-.app{border-radius:28px;background:var(--bg);box-shadow:0 0 50px rgba(0,0,0,.08)}
+.app{
+border-radius:28px;
+background:var(--bg);
+box-shadow:0 0 50px rgba(0,0,0,.08)
+}
 }
 
-.premium-btn{background:#fff7df;color:#8a6500;border:1px solid #f1df9b;box-shadow:var(--shadow);padding:10px 12px;border-radius:14px;font-weight:800;font-size:11px}
-.premium-hero{background:linear-gradient(135deg,#17251f,#315c4c);color:#fff;border-radius:22px;padding:19px;margin-bottom:14px;box-shadow:0 12px 28px rgba(21,70,52,.16)}
-.premium-hero h2{margin:0 0 6px;font-size:20px}
-.premium-hero p{margin:0;color:rgba(255,255,255,.78);font-size:11px;line-height:1.45}
-.plan-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:15px;margin-top:10px}
-.plan-card.premium{border:2px solid #d6b75b}
-.plan-row{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.plan-name{font-weight:800;font-size:15px}
-.price{font-weight:900;font-size:20px}
-.feature-list{list-style:none;padding:0;margin:13px 0 0}
-.feature-list li{padding:7px 0;font-size:12px;border-bottom:1px solid var(--line)}
-.feature-list li:last-child{border-bottom:0}
-.feature-list li:before{content:'✓';color:var(--green);font-weight:900;margin-right:8px}
-.locked{opacity:.82}
-.badge-free{background:#edf2ef;color:#52605a;padding:5px 8px;border-radius:99px;font-size:10px;font-weight:800}
-.badge-premium{background:#fff0bd;color:#7b5b00;padding:5px 8px;border-radius:99px;font-size:10px;font-weight:800}
+.premium-btn{
+background:#fff7df;
+color:#8a6500;
+border:1px solid #f1df9b;
+box-shadow:var(--shadow);
+padding:10px 12px;
+border-radius:14px;
+font-weight:800;
+font-size:11px
+}
 
+.premium-hero{
+background:linear-gradient(135deg,#17251f,#315c4c);
+color:#fff;
+border-radius:22px;
+padding:19px;
+margin-bottom:14px;
+box-shadow:0 12px 28px rgba(21,70,52,.16)
+}
+
+.premium-hero h2{
+margin:0 0 6px;
+font-size:20px
+}
+
+.premium-hero p{
+margin:0;
+color:rgba(255,255,255,.78);
+font-size:11px;
+line-height:1.45
+}
+
+.plan-card{
+background:#fff;
+border:1px solid var(--line);
+border-radius:18px;
+padding:15px;
+margin-top:10px
+}
+
+.plan-card.premium{
+border:2px solid #d6b75b
+}
+
+.plan-row{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px
+}
+
+.plan-name{
+font-weight:800;
+font-size:15px
+}
+
+.price{
+font-weight:900;
+font-size:20px
+}
+
+.feature-list{
+list-style:none;
+padding:0;
+margin:13px 0 0
+}
+
+.feature-list li{
+padding:7px 0;
+font-size:12px;
+border-bottom:1px solid var(--line)
+}
+
+.feature-list li:last-child{border-bottom:0}
+
+.feature-list li:before{
+content:'✓';
+color:var(--green);
+font-weight:900;
+margin-right:8px
+}
+
+.badge-free{
+background:#edf2ef;
+color:#52605a;
+padding:5px 8px;
+border-radius:99px;
+font-size:10px;
+font-weight:800
+}
+
+.badge-premium{
+background:#fff0bd;
+color:#7b5b00;
+padding:5px 8px;
+border-radius:99px;
+font-size:10px;
+font-weight:800
+}
+
+.auth-status{
+font-size:10px;
+color:var(--muted);
+margin-right:2px;
+max-width:90px;
+overflow:hidden;
+text-overflow:ellipsis;
+white-space:nowrap
+}
+
+.account-btn{
+background:#fff;
+border:1px solid var(--line);
+box-shadow:var(--shadow);
+padding:9px 10px;
+border-radius:14px;
+font-weight:800;
+font-size:11px;
+color:var(--ink)
+}
+
+.auth-note{
+background:var(--green2);
+border-radius:14px;
+padding:10px;
+font-size:11px;
+line-height:1.45;
+margin-bottom:12px
+}
+
+.small-card{
+background:#f7faf8;
+border:1px solid var(--line);
+border-radius:14px;
+padding:12px;
+margin:8px 0;
+font-size:12px
+}
 </style>
 </head>
 
 <body>
+
 <div class="app">
 
 <header>
+
 <div class="brand">
 <img class="brand-icon" src="icons/icon-192.png">
-<div><b>My Savings</b><small>Track • Spend • Grow</small></div>
+<div>
+<b>My Savings</b>
+<small>Track • Spend • Grow</small>
 </div>
-<div style="display:flex;gap:7px;align-items:center"><button class="premium-btn" onclick="openPremium()">⭐ Premium</button><button class="iconbtn" onclick="openGoal()" aria-label="Savings goal">🎯</button></div>
+</div>
+
+<div style="display:flex;gap:6px;align-items:center">
+
+<span id="authStatus" class="auth-status">Guest</span>
+
+<button
+class="account-btn"
+onclick="openAccount()">
+👤 Account
+</button>
+
+<button
+class="premium-btn"
+onclick="openPremium()">
+⭐ Premium
+</button>
+
+<button
+class="iconbtn"
+onclick="openGoal()"
+aria-label="Savings goal">
+🎯
+</button>
+
+</div>
+
 </header>
 
 <main id="content"></main>
 
 <nav class="bottom">
-<button class="nav active" data-tab="home" onclick="go('home')"><strong>⌂</strong>Home</button>
-<button class="nav" data-tab="add" onclick="openAdd()"><strong>＋</strong>Add</button>
-<button class="nav" data-tab="history" onclick="go('history')"><strong>▤</strong>History</button>
-<button class="nav" data-tab="insights" onclick="go('insights')"><strong>◒</strong>Insights</button>
+
+<button
+class="nav active"
+data-tab="home"
+onclick="go('home')">
+<strong>⌂</strong>
+Home
+</button>
+
+<button
+class="nav"
+data-tab="add"
+onclick="openAdd()">
+<strong>＋</strong>
+Add
+</button>
+
+<button
+class="nav"
+data-tab="history"
+onclick="go('history')">
+<strong>▤</strong>
+History
+</button>
+
+<button
+class="nav"
+data-tab="insights"
+onclick="go('insights')">
+<strong>◒</strong>
+Insights
+</button>
+
 </nav>
 
 </div>
 
-<div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
-<div class="sheet" id="sheet"></div>
+<div
+class="modal"
+id="modal"
+onclick="if(event.target===this)closeModal()">
+
+<div
+class="sheet"
+id="sheet">
 </div>
 
-<div class="toast" id="toast"></div>
+</div>
+
+<div
+class="toast"
+id="toast">
+</div>
 
 <script>
 
+/* =====================================================
+   SUPABASE CONNECTION
+   ===================================================== */
+
+const SUPABASE_URL =
+'https://avfacqcbxzlirxbzqwiu.supabase.co';
+
+const SUPABASE_PUBLISHABLE_KEY =
+'sb_publishable_BKi6yl58JUAJ0U-ccWn3QA_7eFlq8i4';
+
+const supabaseClient =
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_PUBLISHABLE_KEY
+);
+
+let currentUser = null;
+
+
+/* =====================================================
+   LOCAL APP DATA
+   ===================================================== */
+
 const KEY='mySavings_v1';
+
 const SUB_KEY='mySavings_subscription_v1';
 
 const APP_CONFIG={
-  monthlyPrice:49,
-  yearlyPrice:399
+monthlyPrice:49,
+yearlyPrice:399
 };
 
 const PREMIUM_FEATURES=[
-  'Multiple savings goals',
-  'Advanced spending analysis',
-  'Monthly financial reports',
-  'Budget limits',
-  'Recurring income & expenses',
-  'Export reports',
-  'Advanced savings prediction',
-  'Backup & cloud sync'
+'Multiple savings goals',
+'Advanced spending analysis',
+'Monthly financial reports',
+'Budget limits',
+'Recurring income & expenses',
+'Export reports',
+'Advanced savings prediction',
+'Backup & cloud sync'
 ];
 
-let subscription=JSON.parse(localStorage.getItem(SUB_KEY)||'null')||{
-  plan:'free',
-  status:'inactive',
-  expiresAt:null
+let subscription=
+JSON.parse(
+localStorage.getItem(SUB_KEY)||'null'
+)||{
+plan:'free',
+status:'inactive',
+expiresAt:null
 };
 
 function isPremium(){
-  return subscription.plan==='premium' && subscription.status==='active';
+
+return(
+subscription.plan==='premium' &&
+subscription.status==='active'
+);
+
 }
 
 function requirePremium(feature){
-  if(isPremium())return true;
-  openPremium(feature);
-  return false;
+
+if(isPremium())return true;
+
+openPremium(feature);
+
+return false;
+
 }
 
-let db=JSON.parse(localStorage.getItem(KEY)||'null')||{
+
+let db=
+JSON.parse(
+localStorage.getItem(KEY)||'null'
+)||{
 received:[],
 expenses:[],
 borrowed:[],
@@ -214,240 +878,871 @@ goal:10000
 db.borrowed=db.borrowed||[];
 db.repayments=db.repayments||[];
 
+
 const cats={
-Food:{emoji:'🍔',cls:'food'},
-Travel:{emoji:'🚌',cls:'travel'},
-Stationery:{emoji:'📚',cls:'stationery'},
-Other:{emoji:'•••',cls:'other'}
+Food:{
+emoji:'🍔',
+cls:'food'
+},
+
+Travel:{
+emoji:'🚌',
+cls:'travel'
+},
+
+Stationery:{
+emoji:'📚',
+cls:'stationery'
+},
+
+Other:{
+emoji:'•••',
+cls:'other'
+}
 };
+
 
 let currentTab='home';
 
+
+/* =====================================================
+   BASIC HELPERS
+   ===================================================== */
+
 function save(){
-localStorage.setItem(KEY,JSON.stringify(db))
+
+localStorage.setItem(
+KEY,
+JSON.stringify(db)
+);
+
 }
 
 function money(n){
-return '₹'+Math.round(n||0).toLocaleString('en-IN')
+
+return '₹'+
+Math.round(n||0)
+.toLocaleString('en-IN');
+
 }
 
 function sum(a){
-return a.reduce((x,y)=>x+Number(y.amount||0),0)
+
+return a.reduce(
+(x,y)=>x+Number(y.amount||0),
+0
+);
+
 }
 
 function totalReceived(){
-return sum(db.received)
+
+return sum(db.received);
+
 }
 
 function totalSpent(){
-return sum(db.expenses)
+
+return sum(db.expenses);
+
 }
 
 function totalBorrowed(){
-return sum(db.borrowed.filter(x=>!x.repaid))
+
+return sum(
+db.borrowed.filter(
+x=>!x.repaid
+)
+);
+
 }
 
 function totalRepaid(){
-return sum(db.repayments)
+
+return sum(db.repayments);
+
 }
 
 function savingsBalance(){
-return totalReceived()-totalSpent()
+
+return totalReceived()-totalSpent();
+
 }
 
 function balance(){
-return totalReceived()+sum(db.borrowed)-totalSpent()-totalRepaid()
+
+return(
+totalReceived()+
+sum(db.borrowed)-
+totalSpent()-
+totalRepaid()
+);
+
 }
 
 function monthKey(d){
+
 let x=new Date(d);
-return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')
+
+return(
+x.getFullYear()+
+'-'+
+String(x.getMonth()+1).padStart(2,'0')
+);
+
 }
 
 function thisMonth(){
+
 let k=monthKey(new Date());
+
 return{
-received:sum(db.received.filter(x=>monthKey(x.date)===k)),
-spent:sum(db.expenses.filter(x=>monthKey(x.date)===k))
-}
+
+received:
+sum(
+db.received.filter(
+x=>monthKey(x.date)===k
+)
+),
+
+spent:
+sum(
+db.expenses.filter(
+x=>monthKey(x.date)===k
+)
+)
+
+};
+
 }
 
 function esc(s){
-return String(s||'').replace(/[&<>"']/g,c=>({
+
+return String(s||'')
+.replace(
+/[&<>"']/g,
+c=>({
 '&':'&amp;',
 '<':'&lt;',
 '>':'&gt;',
 '"':'&quot;',
 "'":'&#39;'
-}[c]))
-}
-
-function go(tab){
-currentTab=tab;
-
-document.querySelectorAll('.nav').forEach(n=>
-n.classList.toggle('active',n.dataset.tab===tab)
+}[c])
 );
 
-render()
 }
+
+
+/* =====================================================
+   AUTH
+   ===================================================== */
+
+function updateAuthStatus(){
+
+const el=
+document.getElementById('authStatus');
+
+if(!el)return;
+
+el.textContent=
+currentUser?
+(currentUser.email||'Signed in'):
+'Guest';
+
+}
+
+
+async function refreshAuth(){
+
+try{
+
+const {data}=await
+supabaseClient.auth.getSession();
+
+currentUser=
+data.session?.user||null;
+
+updateAuthStatus();
+
+}catch(e){
+
+console.error(e);
+
+}
+
+}
+
+
+function authValues(){
+
+const email=
+document.getElementById('authEmail')
+?.value.trim();
+
+const password=
+document.getElementById('authPassword')
+?.value;
+
+return{
+email,
+password
+};
+
+}
+
+
+async function signUpAccount(){
+
+const {email,password}=
+authValues();
+
+if(!email)
+return toast('Enter your email');
+
+if(!password || password.length<6)
+return toast('Password must be 6+ characters');
+
+try{
+
+const {data,error}=
+await supabaseClient.auth.signUp({
+email,
+password
+});
+
+if(error)
+throw error;
+
+if(data.user){
+
+currentUser=data.user;
+
+updateAuthStatus();
+
+closeModal();
+
+toast(
+data.session?
+'Account created':
+'Account created. Check your email.'
+);
+
+}
+
+}catch(error){
+
+console.error(error);
+
+toast(
+error.message||
+'Could not create account'
+);
+
+}
+
+}
+
+
+async function signInAccount(){
+
+const {email,password}=
+authValues();
+
+if(!email)
+return toast('Enter your email');
+
+if(!password)
+return toast('Enter your password');
+
+try{
+
+const {data,error}=
+await supabaseClient.auth.signInWithPassword({
+email,
+password
+});
+
+if(error)
+throw error;
+
+currentUser=
+data.user;
+
+updateAuthStatus();
+
+closeModal();
+
+toast('Signed in successfully');
+
+}catch(error){
+
+console.error(error);
+
+toast(
+error.message||
+'Sign in failed'
+);
+
+}
+
+}
+
+
+async function signOutAccount(){
+
+try{
+
+const {error}=
+await supabaseClient.auth.signOut();
+
+if(error)
+throw error;
+
+currentUser=null;
+
+updateAuthStatus();
+
+closeModal();
+
+toast('Signed out');
+
+}catch(error){
+
+console.error(error);
+
+toast(
+error.message||
+'Sign out failed'
+);
+
+}
+
+}
+
+
+async function openAccount(){
+
+document
+.getElementById('modal')
+.classList.add('show');
+
+if(currentUser){
+
+document
+.getElementById('sheet')
+.innerHTML=`
+
+<h2>👤 Your Account</h2>
+
+<div class="auth-note">
+
+Signed in as
+<b>${esc(currentUser.email||'')}</b>
+
+<br><br>
+
+Your My Savings account is connected.
+
+</div>
+
+<div class="small-card">
+
+<strong>Account status</strong>
+
+<br>
+
+🟢 Signed in
+
+</div>
+
+<div class="small-card">
+
+<strong>Premium</strong>
+
+<br>
+
+${isPremium()?
+'⭐ Premium active':
+'Free plan'}
+
+</div>
+
+<button
+class="primary"
+onclick="signOutAccount()">
+
+Sign out
+
+</button>
+
+<button
+class="secondary"
+onclick="closeModal()">
+
+Close
+
+</button>
+
+`;
+
+return;
+
+}
+
+
+document
+.getElementById('sheet')
+.innerHTML=`
+
+<h2>👤 My Savings Account</h2>
+
+<div class="auth-note">
+
+Create an account to prepare your data
+for cloud sync and Premium features.
+
+<br><br>
+
+Your existing local data stays on this
+device for now.
+
+</div>
+
+<div class="field">
+
+<label>Email</label>
+
+<input
+id="authEmail"
+type="email"
+autocomplete="email"
+placeholder="you@example.com">
+
+</div>
+
+<div class="field">
+
+<label>Password</label>
+
+<input
+id="authPassword"
+type="password"
+autocomplete="new-password"
+placeholder="At least 6 characters">
+
+</div>
+
+<button
+class="primary"
+onclick="signUpAccount()">
+
+Create account
+
+</button>
+
+<button
+class="secondary"
+onclick="signInAccount()">
+
+I already have an account — Sign in
+
+</button>
+
+<button
+class="secondary"
+onclick="closeModal()">
+
+Maybe later
+
+</button>
+
+`;
+
+}
+
+
+/* =====================================================
+   NAVIGATION
+   ===================================================== */
+
+function go(tab){
+
+currentTab=tab;
+
+document
+.querySelectorAll('.nav')
+.forEach(n=>
+n.classList.toggle(
+'active',
+n.dataset.tab===tab
+)
+);
+
+render();
+
+}
+
 
 function render(){
 
 const m=thisMonth();
+
 const total=totalSpent();
+
 const rec=totalReceived();
+
 const bal=balance();
 
-if(currentTab==='home')renderHome(m,rec,total,bal);
-if(currentTab==='history')renderHistory();
-if(currentTab==='insights')renderInsights();
+if(currentTab==='home')
+renderHome(
+m,
+rec,
+total,
+bal
+);
 
-window.scrollTo({top:0,behavior:'smooth'})
+if(currentTab==='history')
+renderHistory();
+
+if(currentTab==='insights')
+renderInsights();
+
+window.scrollTo({
+top:0,
+behavior:'smooth'
+});
+
 }
 
-function renderHome(m,rec,total,bal){
 
-const goal=Math.max(1,Number(db.goal)||10000);
-const gp=Math.max(0,Math.min(100,savingsBalance()/goal*100));
+/* =====================================================
+   HOME
+   ===================================================== */
 
-const recent=[...db.expenses]
-.sort((a,b)=>new Date(b.date)-new Date(a.date))
+function renderHome(
+m,
+rec,
+total,
+bal
+){
+
+const goal=
+Math.max(
+1,
+Number(db.goal)||10000
+);
+
+const gp=
+Math.max(
+0,
+Math.min(
+100,
+savingsBalance()/goal*100
+)
+);
+
+const recent=
+[...db.expenses]
+.sort(
+(a,b)=>
+new Date(b.date)-
+new Date(a.date)
+)
 .slice(0,4);
 
 const by=catTotals();
 
-document.getElementById('content').innerHTML=`
+document
+.getElementById('content')
+.innerHTML=`
+
 <div class="fade">
 
 <section class="hero">
-<div class="hero-label">Money remaining</div>
-<div class="hero-value">${money(bal)}</div>
-<div class="hero-sub">Own money + borrowed cash • expenses + repayments</div>
+
+<div class="hero-label">
+Money remaining
+</div>
+
+<div class="hero-value">
+${money(bal)}
+</div>
+
+<div class="hero-sub">
+Own money + borrowed cash • expenses + repayments
+</div>
+
 </section>
+
 
 <section class="stats">
 
 <div class="stat spent">
-<span>Spent this month</span>
-<b>${money(m.spent)}</b>
+
+<span>
+Spent this month
+</span>
+
+<b>
+${money(m.spent)}
+</b>
+
 </div>
 
+
 <div class="stat saved">
-<span>Saved this month</span>
-<b>${money(m.received-m.spent)}</b>
+
+<span>
+Saved this month
+</span>
+
+<b>
+${money(m.received-m.spent)}
+</b>
+
 </div>
 
 </section>
 
+
 <section class="card">
 
 <div class="card-title">
-<b>Quick add</b>
-<span class="muted">Keep it simple</span>
+
+<b>
+Quick add
+</b>
+
+<span class="muted">
+Keep it simple
+</span>
+
 </div>
 
 <div class="quick">
 
-<button class="receive" onclick="openAdd('received')">
+<button
+class="receive"
+onclick="openAdd('received')">
+
 ＋ Money received
+
 </button>
 
-<button class="expense" onclick="openAdd('expense')">
+<button
+class="expense"
+onclick="openAdd('expense')">
+
 ＋ Expense
+
 </button>
 
 </div>
+
 </section>
 
-<section class="card" style="padding:14px 16px">
 
-<div class="card-title" style="margin-bottom:6px">
-<b>💳 Money borrowed</b>
-<button class="goal-edit" onclick="openBorrowed()">＋ Add</button>
+<section
+class="card"
+style="padding:14px 16px">
+
+<div class="card-title">
+
+<b>
+💳 Money borrowed
+</b>
+
+<button
+class="goal-edit"
+onclick="openBorrowed()">
+
+＋ Add
+
+</button>
+
 </div>
 
-<div style="display:flex;justify-content:space-between;align-items:center">
+
+<div
+style="
+display:flex;
+justify-content:space-between;
+align-items:center
+">
 
 <div>
-<span class="muted">You owe</span>
+
+<span class="muted">
+You owe
+</span>
+
 <br>
-<b style="font-size:24px">${money(totalBorrowed())}</b>
+
+<b style="font-size:24px">
+${money(totalBorrowed())}
+</b>
+
 </div>
 
-<button class="secondary" style="width:auto;margin:0;padding:9px 12px" onclick="go('history')">
+<button
+class="secondary"
+style="
+width:auto;
+margin:0;
+padding:9px 12px
+"
+onclick="go('history')">
+
 View
+
 </button>
 
 </div>
+
 </section>
+
 
 <section class="card">
 
 <div class="card-title">
-<b>Saving goal</b>
-<button class="goal-edit" onclick="openGoal()">Edit</button>
+
+<b>
+Saving goal
+</b>
+
+<button
+class="goal-edit"
+onclick="openGoal()">
+
+Edit
+
+</button>
+
 </div>
+
 
 <div class="goal-row">
 
 <div>
-<span class="muted">Current saving</span>
+
+<span class="muted">
+Current saving
+</span>
+
 <br>
-<b>${money(savingsBalance())}</b>
+
+<b>
+${money(savingsBalance())}
+</b>
+
 </div>
 
-<span class="muted">${Math.round(gp)}%</span>
+<span class="muted">
+${Math.round(gp)}%
+</span>
 
 </div>
+
 
 <div class="progress">
+
 <i style="width:${gp}%"></i>
+
 </div>
 
-<div class="muted" style="margin-top:7px">
+
+<div
+class="muted"
+style="margin-top:7px">
+
 Target ${money(goal)}
+
 </div>
 
 </section>
 
+
 <section class="card">
 
 <div class="card-title">
-<b>Where your money goes</b>
-<span class="muted">${money(total)} total</span>
+
+<b>
+Where your money goes
+</b>
+
+<span class="muted">
+${money(total)} total
+</span>
+
 </div>
 
 <div class="chart">
 
-<div class="donut" style="${donutStyle(by,total)}"></div>
+<div
+class="donut"
+style="${donutStyle(by,total)}">
+</div>
 
 <div class="legend">
+
 ${legend(by,total)}
+
 </div>
 
 </div>
+
 </section>
+
 
 <section class="tip">
-💡 <b>${smartTip(by,total)}</b>
+
+💡
+
+<b>
+${smartTip(by,total)}
+</b>
+
 </section>
+
 
 <section class="card">
 
 <div class="card-title">
-<b>Recent expenses</b>
-<button class="goal-edit" onclick="go('history')">See all</button>
+
+<b>
+Recent expenses
+</b>
+
+<button
+class="goal-edit"
+onclick="go('history')">
+
+See all
+
+</button>
+
 </div>
 
-${recent.length
-?recent.map(itemHTML).join('')
-:'<div class="empty">No expenses yet. Add your first one above.</div>'}
+${
+recent.length
+?
+recent.map(itemHTML).join('')
+:
+'<div class="empty">No expenses yet. Add your first one above.</div>'
+}
 
 </section>
 
-</div>`;
+
+</div>
+`;
+
 }
+
+
+/* =====================================================
+   CHART
+   ===================================================== */
 
 function catTotals(){
 
@@ -459,71 +1754,141 @@ Other:0
 };
 
 db.expenses.forEach(x=>{
-o[x.category]=(o[x.category]||0)+Number(x.amount)
+
+o[x.category]=
+(o[x.category]||0)+
+Number(x.amount);
+
 });
 
-return o
+return o;
+
 }
+
 
 function donutStyle(by,total){
 
-if(!total)return'background:#e6eeea';
+if(!total)
+return'background:#e6eeea';
 
 let p=0;
+
 let parts=[];
 
-Object.entries(by).forEach(([k,v])=>{
-let q=v/total*100;
-parts.push(`${catColor(k)} ${p}% ${p+q}%`);
-p+=q
-});
+const colors=[
+'#ff9b2f',
+'#3d8bfd',
+'#8a5cf6',
+'#aab5b0'
+];
 
-return'background:conic-gradient('+parts.join(',')+')'
+Object.entries(by)
+.forEach(
+([k,v],i)=>{
+
+if(v>0){
+
+let start=p;
+
+p+=
+v/total*100;
+
+parts.push(
+`${colors[i]} ${start}% ${p}%`
+);
+
 }
 
-function catColor(k){
-
-return{
-Food:'#ff9b2f',
-Travel:'#3d8bfd',
-Stationery:'#8a5cf6',
-Other:'#aab5b0'
-}[k]
 }
+);
+
+return`
+background:conic-gradient(
+${parts.join(',')}
+)`;
+
+}
+
 
 function legend(by,total){
 
-return Object.entries(by).map(([k,v])=>`
+return Object
+.entries(by)
+.map(
+([k,v],i)=>{
+
+let pct=
+total?
+Math.round(v/total*100):
+0;
+
+return`
 
 <div>
-<span>
-<i class="dot" style="background:${catColor(k)}"></i>
-${k}
-</span>
-<b>${total?Math.round(v/total*100):0}%</b>
-</div>
 
-`).join('')
+<span>
+
+<span
+class="dot"
+style="background:${
+[
+'#ff9b2f',
+'#3d8bfd',
+'#8a5cf6',
+'#aab5b0'
+][i]
+}">
+</span>
+
+${cats[k].emoji}
+${k}
+
+</span>
+
+<b>
+${pct}%
+</b>
+
+</div>
+`;
+
 }
+)
+.join('');
+
+}
+
 
 function smartTip(by,total){
 
 if(!total)
-return'Start tracking every expense. Small records create useful saving suggestions.';
+return'Start recording expenses to get personalized spending advice.';
 
-let top=Object.entries(by).sort((a,b)=>b[1]-a[1])[0];
+const top=
+Object.entries(by)
+.sort((a,b)=>b[1]-a[1])
+[0];
 
-let pct=Math.round(top[1]/total*100);
-let save=Math.round(top[1]*.1);
+if(!top || top[1]<=0)
+return'Keep tracking your expenses to discover your biggest spending area.';
 
-return pct>=30
-?`You spend ${pct}% on ${top[0]}. Cutting it by 10% could save about ${money(save)} for the same spending period.`
-:`Your spending is fairly balanced. Keep recording daily and protect your savings.`
+const pct=
+Math.round(top[1]/total*100);
+
+return`
+${top[0]} is your highest spending category
+at ${pct}%. Try reducing it slightly this month
+and move the difference into savings.
+`;
+
 }
+
 
 function itemHTML(x){
 
-let c=cats[x.category]||cats.Other;
+const c=
+cats[x.category]||
+cats.Other;
 
 return`
 
@@ -536,11 +1901,13 @@ ${c.emoji}
 </div>
 
 <div>
-<b>${esc(x.category)}</b>
+
+<b>
+${esc(x.category)}
+</b>
 
 <small>
-${esc(x.note)||'Expense'} •
-${new Date(x.date).toLocaleDateString('en-IN',{day:'2-digit',month:'short'})}
+${esc(x.note||'Expense')} • ${esc(x.date)}
 </small>
 
 </div>
@@ -548,197 +1915,300 @@ ${new Date(x.date).toLocaleDateString('en-IN',{day:'2-digit',month:'short'})}
 </div>
 
 <div class="amount">
-−${money(x.amount)}
+-${money(x.amount)}
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* =====================================================
+   HISTORY
+   ===================================================== */
+
+function renderHistory(){
+
+const expenses=
+[...db.expenses]
+.sort(
+(a,b)=>
+new Date(b.date)-
+new Date(a.date)
+);
+
+const received=
+[...db.received]
+.sort(
+(a,b)=>
+new Date(b.date)-
+new Date(a.date)
+);
+
+const borrowed=
+[...db.borrowed]
+.sort(
+(a,b)=>
+new Date(b.date)-
+new Date(a.date)
+);
+
+document
+.getElementById('content')
+.innerHTML=`
+
+<div class="fade">
+
+<section class="card">
+
+<div class="card-title">
+
+<b>
+💸 Expenses
+</b>
+
+<span class="muted">
+${money(totalSpent())}
+</span>
+
+</div>
+
+${
+expenses.length
+?
+expenses.map(itemHTML).join('')
+:
+'<div class="empty">No expenses recorded.</div>'
+}
+
+</section>
+
+
+<section class="card">
+
+<div class="card-title">
+
+<b>
+💰 Money received
+</b>
+
+<span class="muted">
+${money(totalReceived())}
+</span>
+
+</div>
+
+${
+received.length
+?
+received.map(
+x=>`
+
+<div class="history-item">
+
+<div class="hleft">
+
+<div
+class="cat"
+style="background:var(--green2)">
+💰
+</div>
+
+<div>
+
+<b>
+${money(x.amount)}
+</b>
+
+<small>
+${esc(x.source||'Other')} • ${esc(x.date)}
+</small>
+
+</div>
+
+</div>
+
+<div
+style="
+color:var(--green);
+font-weight:800">
+
++${money(x.amount)}
+
 </div>
 
 </div>
 
 `
+).join('')
+:
+'<div class="empty">No money received yet.</div>'
 }
 
-function renderHistory(){
-
-let arr=[...db.expenses]
-.sort((a,b)=>new Date(b.date)-new Date(a.date));
-
-document.getElementById('content').innerHTML=`
-
-<div class="fade">
-
-<section class="card" style="margin-top:5px">
-
-<div class="card-title">
-<b>Expense History</b>
-<span class="muted">${arr.length} entries</span>
-</div>
-
-${arr.length
-
-?arr.map(x=>itemHTML(x)+`
-
-<button onclick="deleteExpense('${x.id}')"
-style="float:right;margin-top:-46px;background:none;color:#bd6767;font-size:11px">
-Delete
-</button>
-
-`).join('')
-
-:'<div class="empty">Your expense history will appear here.</div>'}
-
 </section>
+
 
 <section class="card">
 
 <div class="card-title">
-<b>Money received</b>
-<span class="muted">${money(totalReceived())}</span>
-</div>
 
-${db.received.length
-
-?[...db.received]
-.sort((a,b)=>new Date(b.date)-new Date(a.date))
-.map(x=>`
-
-<div class="history-item">
-
-<div>
-<b>💰 ${esc(x.source)||'Family'}</b>
-
-<small>
-${new Date(x.date).toLocaleDateString('en-IN',{day:'2-digit',month:'short'})}
-</small>
-
-</div>
-
-<b style="color:var(--green)">
-+${money(x.amount)}
+<b>
+💳 Borrowed money
 </b>
 
-</div>
+<button
+class="goal-edit"
+onclick="openBorrowed()">
 
-`).join('')
+＋ Add
 
-:'<div class="empty">No money received records yet.</div>'}
-
-</section>
-
-<section class="card">
-
-<div class="card-title">
-
-<b>💳 Money borrowed</b>
-
-<span class="muted">
-${money(totalBorrowed())} due
-</span>
-
-</div>
-
-${db.borrowed.length
-
-?[...db.borrowed]
-.sort((a,b)=>new Date(b.date)-new Date(a.date))
-.map(borrowedHTML).join('')
-
-:'<div class="empty">No borrowed money records yet.</div>'}
-
-<button class="primary" onclick="openBorrowed()">
-＋ Add borrowed money
 </button>
 
+</div>
+
+${
+borrowed.length
+?
+borrowed.map(borrowedHTML).join('')
+:
+'<div class="empty">No borrowed money recorded.</div>'
+}
+
 </section>
 
-</div>`;
+</div>
+`;
+
 }
+
 
 function borrowedHTML(x){
 
-let due=Number(x.amount)-Number(x.paid||0);
+const due=
+Math.max(
+0,
+Number(x.amount)-
+Number(x.paid||0)
+);
 
-let overdue=
+const overdue=
 x.dueDate &&
 due>0 &&
-new Date(x.dueDate+'T23:59:59')<new Date();
+new Date(x.dueDate)<new Date();
 
 return`
 
 <div class="history-item">
 
-<div style="min-width:0">
-
 <div class="hleft">
 
-<div class="cat other">
+<div
+class="cat"
+style="background:#fff8dc">
 💳
 </div>
 
 <div>
 
-<b>${esc(x.person)}</b>
+<b>
+${esc(x.person)}
+</b>
 
 <small>
 
-${money(x.amount)} borrowed •
-${new Date(x.date).toLocaleDateString('en-IN',{day:'2-digit',month:'short'})}
+Borrowed ${money(x.amount)}
 
-${x.dueDate
-?' • Due '+new Date(x.dueDate+'T00:00:00').toLocaleDateString('en-IN',{day:'2-digit',month:'short'})
-:''}
+<br>
 
-</small>
+Remaining ${money(due)}
 
-</div>
+${overdue?' • ⚠ Overdue':''}
 
-</div>
-
-<small style="display:block;color:${overdue?'#d94949':'var(--muted)'};margin-top:5px">
-
-${overdue?'⚠ Overdue':'Remaining '+money(due)}
-
-${x.purpose?' • '+esc(x.purpose):''}
+${x.purpose?
+' • '+esc(x.purpose):
+''}
 
 </small>
 
 </div>
+
+</div>
+
 
 <button
 onclick="openRepay('${x.id}')"
-style="background:var(--green2);color:var(--green);padding:9px 10px;border-radius:11px;font-size:11px;font-weight:800;height:max-content">
+style="
+background:var(--green2);
+color:var(--green);
+padding:9px 10px;
+border-radius:11px;
+font-size:11px;
+font-weight:800;
+height:max-content">
 
 ${due>0?'Repay':'Paid'}
 
 </button>
 
 </div>
-`
+
+`;
+
 }
+
+
+/* =====================================================
+   INSIGHTS
+   ===================================================== */
 
 function renderInsights(){
 
 const by=catTotals();
+
 const total=totalSpent();
+
 const m=thisMonth();
 
-const rows=Object.entries(by)
+const rows=
+Object.entries(by)
 .sort((a,b)=>b[1]-a[1]);
 
-const monthlySave=m.received-m.spent;
+const monthlySave=
+m.received-m.spent;
 
-document.getElementById('content').innerHTML=`
+document
+.getElementById('content')
+.innerHTML=`
 
 <div class="fade">
 
-<section class="card" style="margin-top:5px">
+<section
+class="card"
+style="margin-top:5px">
 
 <div class="card-title">
-<b>Smart Suggestions</b>💡
+
+<b>
+Smart Suggestions
+</b>
+
+💡
+
 </div>
 
-${rows.map(([k,v])=>{
+${
+rows.map(
+([k,v])=>{
 
-let pct=total?Math.round(v/total*100):0;
-let save=Math.round(v*.1);
+let pct=
+total?
+Math.round(v/total*100):
+0;
+
+let save=
+Math.round(v*.1);
 
 return`
 
@@ -750,93 +2220,199 @@ ${cats[k].emoji}
 
 <div>
 
-<b>${k} • ${pct}% of spending</b>
+<b>
+${k} • ${pct}% of spending
+</b>
 
 <p>
+
 You spent ${money(v)}.
-Try reducing ${k.toLowerCase()} by 10%
+
+Try reducing
+${k.toLowerCase()}
+by 10%
 and redirect it to savings.
+
 </p>
 
 <span class="save-pill">
-Potential saving ${money(save)}
+
+Potential saving
+${money(save)}
+
 </span>
 
 </div>
 
 </div>
-`
 
-}).join('')
+`;
 
-||'<div class="empty">Add expenses to unlock personalized suggestions.</div>'}
+}
+).join('')
+||
+'<div class="empty">Add expenses to unlock personalized suggestions.</div>'
+
+}
 
 </section>
+
 
 <section class="card">
 
 <div class="card-title">
-<b>Saving prediction</b>
-<span class="muted">based on your records</span>
+
+<b>
+Saving prediction
+</b>
+
+<span class="muted">
+based on your records
+</span>
+
 </div>
 
-<div class="stat saved" style="box-shadow:none;border:0;padding:0">
 
-<span>Estimate saving per month</span>
+<div
+class="stat saved"
+style="
+box-shadow:none;
+border:0;
+padding:0">
 
-<b>${money(monthlySave)}</b>
+<span>
+Estimated saving per month
+</span>
+
+<b>
+${money(monthlySave)}
+</b>
+
+</div>
+
+
+<p class="muted">
+
+If your recent monthly saving continues:
+
+</p>
+
+
+<div
+style="
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:8px">
+
+${[3,6,12].map(
+n=>`
+
+<div
+style="
+background:var(--green2);
+padding:12px;
+border-radius:14px">
+
+<span class="muted">
+${n} months
+</span>
+
+<br>
+
+<b>
+${money(monthlySave*n)}
+</b>
+
+</div>
+
+`
+).join('')}
+
+</div>
+
+</section>
+
+
+<section class="tip">
+
+🎯
+
+<b>
+Best rule for you:
+</b>
+
+record the expense immediately.
+
+At the end of each week,
+check the biggest category
+and cut that one first.
+
+</section>
+
+
+<section class="card">
+
+<div class="card-title">
+
+<b>
+⭐ Premium
+</b>
+
+<span class="badge-premium">
+UPGRADE
+</span>
 
 </div>
 
 <p class="muted">
-If your recent monthly saving continues:
+
+Unlock advanced financial tools,
+reports, budgets and cloud backup.
+
 </p>
 
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<button
+class="primary"
+onclick="openPremium()">
 
-${[3,6,12].map(n=>`
+View Premium
 
-<div style="background:var(--green2);padding:12px;border-radius:14px">
-
-<span class="muted">${n} months</span>
-
-<br>
-
-<b>${money(monthlySave*n)}</b>
-
-</div>
-
-`).join('')}
-
-</div>
+</button>
 
 </section>
 
-<section class="tip">
+</div>
+`;
 
-🎯 <b>Best rule for you:</b>
-record the expense immediately.
-At the end of each week,
-check the biggest category and cut that one first.
-
-</section>
-
-</div>`;
 }
+
+
+/* =====================================================
+   ADD MONEY / EXPENSE
+   ===================================================== */
 
 function openAdd(type='expense'){
 
-document.getElementById('modal').classList.add('show');
+document
+.getElementById('modal')
+.classList.add('show');
 
-const isRec=type==='received';
+const isRec=
+type==='received';
 
-document.getElementById('sheet').innerHTML=`
+document
+.getElementById('sheet')
+.innerHTML=`
 
-<h2>${isRec?'Add Money Received':'Add Expense'}</h2>
+<h2>
+${isRec?'Add Money Received':'Add Expense'}
+</h2>
 
 <div class="field">
 
-<label>Amount</label>
+<label>
+Amount
+</label>
 
 <input
 id="amount"
@@ -846,83 +2422,121 @@ placeholder="₹ 0"
 min="0">
 
 </div>
-  
-${isRec
 
-?`
+${
+isRec
+?
+`
 
 <div class="field">
 
-<label>From</label>
+<label>
+From
+</label>
 
 <select id="source">
 
-<option>Family</option>
-<option>Other</option>
+<option>
+Family
+</option>
+
+<option>
+Other
+</option>
 
 </select>
 
 </div>
 
 `
-
-:`
+:
+`
 
 <div class="field">
 
-<label>Purpose</label>
+<label>
+Purpose
+</label>
 
 <div class="cats">
 
-${Object.entries(cats).map(([k,c])=>`
+${
+Object
+.entries(cats)
+.map(
+([k,c])=>`
 
 <button
-class="catpick ${k==='Food'?'sel':''}"
+class="catpick ${
+k==='Food'?'sel':''
+}"
 data-cat="${k}"
 onclick="pickCat(this)">
 
 ${c.emoji}
+
 <br>
+
 ${k}
 
 </button>
 
-`).join('')}
+`
+)
+.join('')
+}
 
 </div>
 
 </div>
+
 
 <div class="field">
 
-<label>Note (optional)</label>
+<label>
+Note (optional)
+</label>
 
-<input id="note"
+<input
+id="note"
 placeholder="e.g. Lunch at college">
 
 </div>
 
-`}
+`
+}
 
 <div class="field">
 
-<label>Date</label>
+<label>
+Date
+</label>
 
 <input
 id="date"
 type="date"
-value="${new Date().toISOString().slice(0,10)}">
+value="${
+new Date()
+.toISOString()
+.slice(0,10)
+}">
 
 </div>
 
-<button class="primary"
-onclick="${isRec?'saveReceived()':'saveExpense()'}">
+<button
+class="primary"
+onclick="${
+isRec?
+'saveReceived()':
+'saveExpense()'
+}">
 
 Save
 
 </button>
 
-<button class="secondary"
+<button
+class="secondary"
 onclick="closeModal()">
 
 Cancel
@@ -930,91 +2544,142 @@ Cancel
 </button>
 
 `;
+
 }
+
 
 function pickCat(btn){
 
-document.querySelectorAll('.catpick')
-.forEach(x=>x.classList.remove('sel'));
+document
+.querySelectorAll('.catpick')
+.forEach(
+x=>x.classList.remove('sel')
+);
 
-btn.classList.add('sel')
+btn.classList.add('sel');
+
 }
+
 
 function saveExpense(){
 
-let amount=Number(document.getElementById('amount').value);
+let amount=
+Number(
+document.getElementById('amount')
+.value
+);
 
 if(!(amount>0))
 return toast('Enter an amount');
 
 let cat=
-document.querySelector('.catpick.sel')?.dataset.cat||'Food';
+document
+.querySelector('.catpick.sel')
+?.dataset.cat||
+'Food';
 
 db.expenses.push({
+
 id:Date.now().toString(),
+
 amount,
+
 category:cat,
-note:document.getElementById('note').value,
-date:document.getElementById('date').value
+
+note:
+document.getElementById('note')
+.value,
+
+date:
+document.getElementById('date')
+.value
+
 });
 
 save();
+
 closeModal();
+
 toast('Expense saved');
-go('home')
+
+go('home');
+
 }
+
 
 function saveReceived(){
 
-let amount=Number(document.getElementById('amount').value);
+let amount=
+Number(
+document.getElementById('amount')
+.value
+);
 
 if(!(amount>0))
 return toast('Enter an amount');
 
 db.received.push({
+
 id:Date.now().toString(),
+
 amount,
-source:document.getElementById('source').value,
-date:document.getElementById('date').value
+
+source:
+document.getElementById('source')
+.value,
+
+date:
+document.getElementById('date')
+.value
+
 });
 
 save();
+
 closeModal();
+
 toast('Money received');
-go('home')
+
+go('home');
+
 }
 
-function deleteExpense(id){
 
-if(!confirm('Delete this expense?'))
-return;
-
-db.expenses=db.expenses.filter(x=>x.id!==id);
-
-save();
-render();
-toast('Expense deleted')
-}
+/* =====================================================
+   BORROWED MONEY
+   ===================================================== */
 
 function openBorrowed(){
 
-document.getElementById('modal').classList.add('show');
+document
+.getElementById('modal')
+.classList.add('show');
 
-document.getElementById('sheet').innerHTML=`
-<h2>💳 Borrowed Money</h2>
+document
+.getElementById('sheet')
+.innerHTML=`
+
+<h2>
+💳 Borrowed Money
+</h2>
 
 <div class="field">
 
-<label>Borrowed from</label>
+<label>
+Borrowed from
+</label>
 
-<input id="bperson"
+<input
+id="bperson"
 placeholder="e.g. Rahul">
 
 </div>
 
 <div class="field">
 
-<label>Amount borrowed</label>
+<label>
+Amount borrowed
+</label>
 
 <input
 id="bamount"
@@ -1027,41 +2692,55 @@ min="0">
 
 <div class="field">
 
-<label>Purpose (optional)</label>
+<label>
+Purpose (optional)
+</label>
 
-<input id="bpurpose"
+<input
+id="bpurpose"
 placeholder="e.g. College fees">
 
 </div>
 
 <div class="field">
 
-<label>Date borrowed</label>
+<label>
+Date borrowed
+</label>
 
 <input
 id="bdate"
 type="date"
-value="${new Date().toISOString().slice(0,10)}">
+value="${
+new Date()
+.toISOString()
+.slice(0,10)
+}">
 
 </div>
 
 <div class="field">
 
-<label>Return by (optional)</label>
+<label>
+Return by (optional)
+</label>
 
-<input id="bdue"
+<input
+id="bdue"
 type="date">
 
 </div>
 
-<button class="primary"
+<button
+class="primary"
 onclick="saveBorrowed()">
 
 Save borrowed money
 
 </button>
 
-<button class="secondary"
+<button
+class="secondary"
 onclick="closeModal()">
 
 Cancel
@@ -1069,15 +2748,24 @@ Cancel
 </button>
 
 `;
+
 }
+
 
 function saveBorrowed(){
 
 let person=
-document.getElementById('bperson').value.trim();
+document
+.getElementById('bperson')
+.value
+.trim();
 
 let amount=
-Number(document.getElementById('bamount').value);
+Number(
+document
+.getElementById('bamount')
+.value
+);
 
 if(!person)
 return toast('Enter the person name');
@@ -1094,13 +2782,20 @@ person,
 amount,
 
 purpose:
-document.getElementById('bpurpose').value.trim(),
+document
+.getElementById('bpurpose')
+.value
+.trim(),
 
 date:
-document.getElementById('bdate').value,
+document
+.getElementById('bdate')
+.value,
 
 dueDate:
-document.getElementById('bdue').value,
+document
+.getElementById('bdue')
+.value,
 
 paid:0,
 
@@ -1109,33 +2804,60 @@ repaid:false
 });
 
 save();
+
 closeModal();
+
 toast('Borrowed money saved');
-go('home')
+
+go('home');
+
 }
+
+
+/* =====================================================
+   REPAYMENT
+   ===================================================== */
 
 function openRepay(id){
 
-let x=db.borrowed.find(b=>b.id===id);
+let x=
+db.borrowed.find(
+b=>b.id===id
+);
 
 if(!x)return;
 
 let due=
-Number(x.amount)-Number(x.paid||0);
+Number(x.amount)-
+Number(x.paid||0);
 
-document.getElementById('modal').classList.add('show');
+document
+.getElementById('modal')
+.classList
+.add('show');
 
-document.getElementById('sheet').innerHTML=`
+document
+.getElementById('sheet')
+.innerHTML=`
 
-<h2>↩️ Repay ${esc(x.person)}</h2>
+<h2>
+↩️ Repay ${esc(x.person)}
+</h2>
 
 <div class="tip">
-Remaining: <b>${money(due)}</b>
+
+Remaining:
+<b>
+${money(due)}
+</b>
+
 </div>
 
 <div class="field">
 
-<label>Amount to repay</label>
+<label>
+Amount to repay
+</label>
 
 <input
 id="repayAmount"
@@ -1149,23 +2871,31 @@ min="0">
 
 <div class="field">
 
-<label>Date repaid</label>
+<label>
+Date repaid
+</label>
 
 <input
 id="repayDate"
 type="date"
-value="${new Date().toISOString().slice(0,10)}">
+value="${
+new Date()
+.toISOString()
+.slice(0,10)
+}">
 
 </div>
 
-<button class="primary"
+<button
+class="primary"
 onclick="saveRepay('${id}')">
 
 Save repayment
 
 </button>
 
-<button class="secondary"
+<button
+class="secondary"
 onclick="closeModal()">
 
 Cancel
@@ -1173,19 +2903,29 @@ Cancel
 </button>
 
 `;
+
 }
+
 
 function saveRepay(id){
 
-let x=db.borrowed.find(b=>b.id===id);
+let x=
+db.borrowed.find(
+b=>b.id===id
+);
 
 if(!x)return;
 
 let due=
-Number(x.amount)-Number(x.paid||0);
+Number(x.amount)-
+Number(x.paid||0);
 
 let a=
-Number(document.getElementById('repayAmount').value);
+Number(
+document
+.getElementById('repayAmount')
+.value
+);
 
 if(!(a>0))
 return toast('Enter repayment amount');
@@ -1208,49 +2948,72 @@ borrowedId:id,
 amount:a,
 
 date:
-document.getElementById('repayDate').value
+document
+.getElementById('repayDate')
+.value
 
 });
 
 save();
+
 closeModal();
 
 toast(
-x.repaid
-?'Fully repaid'
-:'Repayment saved'
+x.repaid?
+'Fully repaid':
+'Repayment saved'
 );
 
-go('history')
+go('history');
+
 }
+
+
+/* =====================================================
+   SAVINGS GOAL
+   ===================================================== */
 
 function openGoal(){
 
-document.getElementById('modal').classList.add('show');
+document
+.getElementById('modal')
+.classList
+.add('show');
 
-document.getElementById('sheet').innerHTML=`
-  <h2>🎯 Savings Goal</h2>
+document
+.getElementById('sheet')
+.innerHTML=`
+
+<h2>
+🎯 Savings Goal
+</h2>
 
 <div class="field">
 
-<label>Your target</label>
+<label>
+Your target
+</label>
 
 <input
 id="goal"
 type="number"
 inputmode="decimal"
-value="${Number(db.goal)||10000}">
+value="${
+Number(db.goal)||10000
+}">
 
 </div>
 
-<button class="primary"
+<button
+class="primary"
 onclick="saveGoal()">
 
 Save goal
 
 </button>
 
-<button class="secondary"
+<button
+class="secondary"
 onclick="closeModal()">
 
 Cancel
@@ -1258,12 +3021,18 @@ Cancel
 </button>
 
 `;
+
 }
+
 
 function saveGoal(){
 
 let n=
-Number(document.getElementById('goal').value);
+Number(
+document
+.getElementById('goal')
+.value
+);
 
 if(!(n>0))
 return toast('Enter a valid goal');
@@ -1271,80 +3040,224 @@ return toast('Enter a valid goal');
 db.goal=n;
 
 save();
+
 closeModal();
+
 render();
 
-toast('Goal updated')
+toast('Goal updated');
+
 }
+
+
+/* =====================================================
+   PREMIUM
+   ===================================================== */
 
 function openPremium(feature=''){
 
-  document.getElementById('modal').classList.add('show');
+document
+.getElementById('modal')
+.classList
+.add('show');
 
-  document.getElementById('sheet').innerHTML=`
+document
+.getElementById('sheet')
+.innerHTML=`
 
-    <div class="premium-hero">
-      <h2>⭐ My Savings Premium</h2>
-      <p>Get more control over your savings, spending and financial planning.</p>
-    </div>
+<div class="premium-hero">
 
-    ${feature?`<div class="tip" style="margin-bottom:10px">🔒 <b>${esc(feature)}</b> is a Premium feature.</div>`:''}
+<h2>
+⭐ My Savings Premium
+</h2>
 
-    <div class="plan-card">
-      <div class="plan-row">
-        <div>
-          <div class="plan-name">Free</div>
-          <span class="badge-free">CURRENT PLAN</span>
-        </div>
-        <div class="price">₹0</div>
-      </div>
-      <ul class="feature-list">
-        <li>Money received tracking</li>
-        <li>Daily expense tracking</li>
-        <li>Borrowed money & repayments</li>
-        <li>One savings goal</li>
-        <li>Basic spending insights</li>
-      </ul>
-    </div>
+<p>
+Get more control over your savings,
+spending and financial planning.
+</p>
 
-    <div class="plan-card premium">
-      <div class="plan-row">
-        <div>
-          <div class="plan-name">Premium ⭐</div>
-          <span class="badge-premium">MORE CONTROL</span>
-        </div>
-        <div class="price">₹${APP_CONFIG.monthlyPrice}<span style="font-size:10px;font-weight:700">/month</span></div>
-      </div>
-      <ul class="feature-list">
-        ${PREMIUM_FEATURES.map(x=>`<li>${x}</li>`).join('')}
-      </ul>
-    </div>
+</div>
 
-    <button class="primary" onclick="premiumComingSoon()">
-      Continue to Premium
-    </button>
+${
+feature?
+`
+<div
+class="tip"
+style="margin-bottom:10px">
 
-    <button class="secondary" onclick="closeModal()">Maybe later</button>
+🔒
 
-    <p class="muted" style="text-align:center;margin:12px 4px 0;line-height:1.5">
-      Secure payment and verified subscription activation will be connected before launch.
-    </p>
-  `;
+<b>
+${esc(feature)}
+</b>
+
+is a Premium feature.
+
+</div>
+`:''
 }
+
+
+<div class="plan-card">
+
+<div class="plan-row">
+
+<div>
+
+<div class="plan-name">
+Free
+</div>
+
+<span class="badge-free">
+CURRENT PLAN
+</span>
+
+</div>
+
+<div class="price">
+₹0
+</div>
+
+</div>
+
+<ul class="feature-list">
+
+<li>
+Money received tracking
+</li>
+
+<li>
+Daily expense tracking
+</li>
+
+<li>
+Borrowed money & repayments
+</li>
+
+<li>
+One savings goal
+</li>
+
+<li>
+Basic spending insights
+</li>
+
+</ul>
+
+</div>
+
+
+<div class="plan-card premium">
+
+<div class="plan-row">
+
+<div>
+
+<div class="plan-name">
+Premium ⭐
+</div>
+
+<span class="badge-premium">
+MORE CONTROL
+</span>
+
+</div>
+
+<div class="price">
+
+₹${APP_CONFIG.monthlyPrice}
+
+<span
+style="
+font-size:10px;
+font-weight:700">
+
+/month
+
+</span>
+
+</div>
+
+</div>
+
+
+<ul class="feature-list">
+
+${
+PREMIUM_FEATURES
+.map(
+x=>`<li>${x}</li>`
+)
+.join('')
+}
+
+</ul>
+
+</div>
+
+
+<button
+class="primary"
+onclick="premiumComingSoon()">
+
+Continue to Premium
+
+</button>
+
+
+<button
+class="secondary"
+onclick="closeModal()">
+
+Maybe later
+
+</button>
+
+
+<p
+class="muted"
+style="
+text-align:center;
+margin:12px 4px 0;
+line-height:1.5">
+
+Secure payment and verified subscription
+activation will be connected before launch.
+
+</p>
+
+`;
+
+}
+
 
 function premiumComingSoon(){
-  toast('Premium payment is being prepared');
+
+toast(
+'Premium payment is being prepared'
+);
+
 }
+
+
+/* =====================================================
+   CLOSE / TOAST
+   ===================================================== */
 
 function closeModal(){
 
-document.getElementById('modal')
-.classList.remove('show')
+document
+.getElementById('modal')
+.classList
+.remove('show');
+
 }
+
 
 function toast(t){
 
-let e=document.getElementById('toast');
+let e=
+document.getElementById('toast');
 
 e.textContent=t;
 
@@ -1353,22 +3266,57 @@ e.classList.add('show');
 setTimeout(
 ()=>e.classList.remove('show'),
 1800
-)
+);
+
 }
 
-if('serviceWorker' in navigator)
 
-window.addEventListener('load',()=>
+/* =====================================================
+   SUPABASE SESSION LISTENER
+   ===================================================== */
+
+supabaseClient.auth.onAuthStateChange(
+(event,session)=>{
+
+currentUser=
+session?.user||null;
+
+updateAuthStatus();
+
+}
+);
+
+
+/* =====================================================
+   START APP
+   ===================================================== */
+
+(async function(){
+
+await refreshAuth();
+
+render();
+
+})();
+
+
+/* =====================================================
+   SERVICE WORKER
+   ===================================================== */
+
+if('serviceWorker' in navigator){
+
+window.addEventListener(
+'load',
+()=>
 navigator.serviceWorker
 .register('service-worker.js')
 .catch(()=>{})
 );
 
-render();
+}
 
 </script>
 
 </body>
 </html>
-
-
